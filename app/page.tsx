@@ -1,65 +1,154 @@
-import Image from "next/image";
+"use client";
+import { useState } from "react";
+import NotificationBanner from "@/components/notification-banner/NotificationBanner";
+import SearchFilter from "@/components/search-filter/SearchFilter";
+import PasswordStrength from "@/components/password-strength/PasswordStrength";
+import ShoppingCart from "@/components/shopping-cart/ShoppingCart";
+import LoginForm from "@/components/user-auth/LoginForm";
+import UserSearch from "@/components/user-search/UserSearch";
+
+const sampleItems = [
+  { id: 1, name: "React Handbook", category: "books" },
+  { id: 2, name: "TypeScript Guide", category: "books" },
+  { id: 3, name: "Node.js Course", category: "courses" },
+  { id: 4, name: "CSS Masterclass", category: "courses" },
+  { id: 5, name: "VS Code", category: "tools" },
+];
 
 export default function Home() {
+  const [notification, setNotification] = useState<{
+    type: "success" | "error" | "warning" | "info";
+    message: string;
+  } | null>({ type: "info", message: "Welcome to the testing playground!" });
+
+  const [loggedInUser, setLoggedInUser] = useState<string | null>(null);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <div className="min-h-screen bg-white p-8">
+      {/* <main className="max-w-4xl mx-auto flex flex-col gap-12">
+        <h1 className="text-3xl font-bold text-black">
+          Production Testing Playground
+        </h1>
+        <section className="border border-zinc-200 rounded-lg p-6">
+          <h2 className="text-xl font-semibold mb-4 text-black">
+            Notification Banner
+          </h2>
+          <div className="flex gap-2 mb-4">
+            <button
+              className="px-3 py-1 bg-green-100 text-green-800 rounded"
+              onClick={() =>
+                setNotification({ type: "success", message: "Operation successful!" })
+              }
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+              Success
+            </button>
+            <button
+              className="px-3 py-1 bg-red-100 text-red-800 rounded"
+              onClick={() =>
+                setNotification({ type: "error", message: "Something went wrong!" })
+              }
             >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+              Error
+            </button>
+            <button
+              className="px-3 py-1 bg-yellow-100 text-yellow-800 rounded"
+              onClick={() =>
+                setNotification({ type: "warning", message: "Proceed with caution!" })
+              }
+            >
+              Warning
+            </button>
+          </div>
+          {notification && (
+            <NotificationBanner
+              type={notification.type}
+              message={notification.message}
+              dismissible
+              onDismiss={() => setNotification(null)}
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+          )}
+        </section>
+        <section className="border border-zinc-200 rounded-lg p-6">
+          <h2 className="text-xl font-semibold mb-4 text-black ">
+            Search & Filter
+          </h2>
+          <SearchFilter items={sampleItems} />
+        </section>
+        <section className="border border-zinc-200 rounded-lg p-6">
+          <h2 className="text-xl font-semibold mb-4 text-black ">
+            Password Strength Checker
+          </h2>
+          <PasswordStrength />
+        </section>
+        <section className="border border-zinc-200 rounded-lg p-6">
+          <h2 className="text-xl font-semibold mb-4 text-black ">
+            Shopping Cart
+          </h2>
+          <ShoppingCart />
+        </section>
+        <section className="border border-zinc-200 rounded-lg p-6">
+          <h2 className="text-xl font-semibold mb-4 text-black ">
+            User Authentication
+          </h2>
+          {loggedInUser ? (
+            <p className="text-green-600">Welcome, {loggedInUser}!</p>
+          ) : (
+            <LoginForm
+              onSuccess={(token, userName) => setLoggedInUser(userName)}
+            />
+          )}
+        </section>
+      </main> */}
+
+      {/* 
+      
+      
+      I don't know the syntax of writing test cases , but I can pretty much tell what to do. So write down test cases according to exactly what I tell. 
+      No refinements , no improvisations.
+
+
+      Define a mock data of users of 10 ( no of it containing concecutive "ww" letter on their first or last name or email )
+
+      in this format : export type User = {
+          id: number;
+          name: string;
+          email: string;
+          phone: string;
+        };
+
+      1. 
+        - describe ( "checking the initial state of the component")
+        - setup the global fetch catching mocking & return the mock data 
+        - Render the <UserSearch /> , 
+          - there should be a text of  "10 users found" present on the screen.
+          - grab the ul element & there should be 10 users displayed on the screen
+          
+          
+          2. 
+          - describe ("checking the filtering logic")
+          - setup the global fetch catching mocking & return the mock data 
+          - Render the <UserSearch /> , 
+          - grab the ul element , type "le" via the userevent and the all users listed on the screen must contains/includes the letter "le"  on their names or emails.
+          
+          
+          3. 
+          - describe ("Matches the condition for user not found on filtering logic")
+          - setup the global fetch catching mocking & return the mock data 
+          - Render the <UserSearch /> , 
+            - grab the ul element , type "ww" via the userevent and the screen must contain "No users found matching “ww”" this text
+            - there must be a text of  "0 users found" present on the screen.
+        
+          
+
+
+this is the test cases I figured out for this UserSearch.tsx component , Now implement it inside `user-search.test.tsx` file
+
+      
+      */}
+
+      <UserSearch />
     </div>
   );
 }
+
+
