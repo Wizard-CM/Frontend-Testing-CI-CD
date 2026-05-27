@@ -109,4 +109,9 @@ describe("Home page - UserSearch integration", () => {
       expect(alert).toHaveTextContent("Failed to fetch");
     });
   });
+
+  // INTENTIONAL FAILURE — remove this test after verifying CI catches it
+  test("this test should fail on purpose", () => {
+    expect(1 + 1).toBe(3);
+  });
 });
